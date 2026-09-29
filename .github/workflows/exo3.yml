@@ -18,7 +18,7 @@ jobs:
           node-version: 24.18.0
       - run: npm i
       - run: npm ci
-      - run: npm build
+      - run: npm run build
       - run: |
           if [ ! -d dist ]; then
             echo "::error::Le dossier dist/n n'existe pas"
