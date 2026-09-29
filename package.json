@@ -1,0 +1,19 @@
+{
+  "name": "cicd_test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Griiisphon/cicd_test.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Griiisphon/cicd_test/issues"
+  },
+  "homepage": "https://github.com/Griiisphon/cicd_test#readme"
+}

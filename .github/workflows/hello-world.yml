@@ -9,4 +9,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - run: echo "Hello world"
+      - uses: actions/setup-node@v7
+      - uses: actions/checkout@v7
+        with:
+          node-version: 24.18.0
+      - uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+      - uses: github/codeql-action/init@v4
+      - uses: docker/build-push-actions@v7
+      - uses: actions/upload-artifacts@v7
+        with:
+          name: build
+          path: dist/
+      - run: npm i
+      - run: npm run test
+      - run: |
+          echo "Status : ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "Commit : ${{ github.sha }}"  >> $GITHUB_STEP_SUMMARY
