@@ -1,0 +1,61 @@
+name: Exo2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.0.0
+
+    steps:
+      # 1. Récupérer le code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Préparer l'environnement Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26.18.0
+          cache: npm
+
+      # 3. Installer les dépendances
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Lancer le build
+      - name: Build
+        run: npm run build
+
+      # 5. Vérifier que dist/ existe
+      - name: Verify build
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Erreur : le dossier dist/ n'existe pas."
+            exit 1
+          fi
+
+          echo "Build réussi."
+          echo "Contenu de dist/:"
+          ls -la dist/
+
+      # 6. Sauvegarder dist/ comme artifact
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      # 7. Écrire un résumé du build
+      - name: Build summary
+        run: |
+          echo "## Résumé du build 🚀" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Workflow :** ${{ github.workflow }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Branche :** ${{ github.ref_name }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Commit :** ${{ github.sha }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Node.js :** 20" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Artifact :** dist/" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Fichiers générés" >> "$GITHUB_STEP_SUMMARY"
+          find dist -type f >> "$GITHUB_STEP_SUMMARY"
