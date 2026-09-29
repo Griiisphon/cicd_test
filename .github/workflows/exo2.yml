@@ -1,29 +1,30 @@
 name: Exo 2
 
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   test:
-    runs-on: ubuntu-24.0.0
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
-      - uses: actions/checkout@v7
         with:
           node-version: 24.18.0
-      - uses: actions/cache@v5
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('package-lock.json') }}
-      - uses: github/codeql-action/init@v4
-      - uses: actions/upload-artifact@v7
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          if [ ! -d dist ]; then
+            echo "::error::Le dossier dist/n n'existe pas"
+            exit 1
+          fi
+      - run: npm run test
+      - uses: action/upload-artifacts@v7
         with:
           name: build
           path: dist/
-      - run: npm setup
-      - run: npm run test
       - run: |
+          echo "## Build" >> $GITHUB_STEP_SUMMARY
           echo "Status : ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
           echo "Commit : ${{ github.sha }}"  >> $GITHUB_STEP_SUMMARY
