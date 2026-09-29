@@ -1,0 +1,13 @@
+name: Hello world
+
+on:
+  push:
+
+jobs:
+  test:
+    # runs-on: ubuntu-latest
+    runs-on: alpine-latest
+
+    steps:
+      - uses: actions/checkout@v7
+      - run: echo "Hello world"
