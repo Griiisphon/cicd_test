@@ -20,7 +20,7 @@ jobs:
             exit 1
           fi
       - run: npm run test
-      - uses: action/upload-artifacts@v7
+      - uses: action/upload-artifact@v7
         with:
           name: build
           path: dist/
