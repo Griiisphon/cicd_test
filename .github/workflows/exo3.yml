@@ -25,7 +25,6 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24.18.0
-      - run: npm i
       - run: npm ci
       - run: npm run build
       - run: |
@@ -59,6 +58,7 @@ jobs:
 
 
     steps:
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
@@ -66,11 +66,12 @@ jobs:
         with:
           name: build
           path: dist/
-      - run: |
-          if [ ! -d dist ]; then
-            echo "::error::Le dossier dist/n n'existe pas"
-            exit 1
-          fi
+      # - run: |
+      #     if [ ! -d dist ]; then
+      #       echo "::error::Le dossier dist/n n'existe pas"
+      #       exit 1
+      #     fi
+      - run: npm ci
       - run: npm run test
       - run: |
           echo "Environement : ${{ vars.ENV }}"
