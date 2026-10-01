@@ -1,15 +1,24 @@
 name: Exo 3
 
+permissions:
+  contents: read
+  packages: read
+
 on:
   workflow_dispatch:
+    inputs:
+      environement:
+        description: Choose environement
+        required: true
+        default: "prod"
+        type: choice
+        options:
+          - prod
+          - staging
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-      packages: write
 
     steps:
       - uses: actions/checkout@v7
@@ -47,23 +56,21 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     environment: preprod
-    permissions:
-      contents: read
-      packages: read
+
 
     steps:
       - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
+      - uses: actions/download-artifact@v7
+        with:
+          name: build
+          path: dist/
       - run: |
           if [ ! -d dist ]; then
             echo "::error::Le dossier dist/n n'existe pas"
             exit 1
           fi
-      - uses: actions/download-artifact@v7
-        with:
-          name: build
-          path: dist/
       - run: npm run test
       - run: |
           echo "Environement : ${{ vars.ENV }}"
